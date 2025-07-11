@@ -35,7 +35,7 @@ curl -X 'POST' \
 2️⃣ Create an API Token for the Service Account
 Replace 5 with the id from the output above:
 curl -X 'POST' \
-  'http://masun:123456@localhost:3000/api/serviceaccounts/5/tokens' \
+  'http://admin:admin@localhost:3000/api/serviceaccounts/5/tokens' \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
