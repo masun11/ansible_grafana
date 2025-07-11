@@ -16,7 +16,7 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
     "isDisabled": false,
-    "name": "sa_masun",
+    "name": "sa_admin",
     "role": "Admin"
 }'
 ✅ Example Output:
