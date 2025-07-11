@@ -1,0 +1,56 @@
+---
+- name: Grafana Prometheus As Datasource & Build Dashboard
+  hosts: localhost
+  gather_facts: false
+  vars:
+    grafana_host: "http://172.31.32.5:3000"
+
+  tasks:
+
+    - name: Set Grafana token from environment
+      set_fact: 
+        grafana_token: "{{ lookup('env', 'GRAFANA_TOKEN') }}"
+
+    - name: Read datasource JSON from file
+      slurp:
+        src: datasource.json
+      register: datasource_json_file
+      
+    - name: Read dashboard JSON from file
+      slurp:
+        src: dashboard.json
+      register: dashboard_json_file
+
+    - name: Create datasource in Grafana
+      uri:
+        url: "{{ grafana_host }}/api/datasources"
+        method: POST
+        headers:
+          Content-Type: "application/json"
+          Accept: "application/json"
+          Authorization: "Bearer {{ grafana_token }}"
+        body: "{{ datasource_json_file['content'] | b64decode }}"
+        status_code: 200, 409  # 409 = conflict, already exists
+        body_format: json
+      register: grafana_datasource_response
+
+    - name: Create dashboard in Grafana
+      uri: 
+        url: "{{ grafana_host }}/api/dashboards/db"
+        method: POST
+        headers:
+          Content-Type: "application/json"
+          Accept: "application/json"
+          Authorization: "Bearer {{ grafana_token }}"
+        body: "{{ dashboard_json_file['content'] | b64decode}}"
+        status_code: 200, 409
+        body_format: json
+      register: grafana_dashboard_response
+
+    - name: Show Grafana Datasource response
+      debug:
+        var: grafana_datasource_response.json
+
+    - name: Show Grafana Dashboard response
+      debug:
+        var: grafana_dashboard_response.json
