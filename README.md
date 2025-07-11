@@ -11,7 +11,7 @@ cd ansible_grafana
 🚀 How to Set Up
 1️⃣ Create a Service Account in Grafana
 curl -X 'POST' \
-  'http://admin:admin@172.31.32.5:3000/api/serviceaccounts' \
+  'http://admin:admin@localhost:3000/api/serviceaccounts' \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -35,7 +35,7 @@ curl -X 'POST' \
 2️⃣ Create an API Token for the Service Account
 Replace 5 with the id from the output above:
 curl -X 'POST' \
-  'http://masun:123456@172.31.32.5:3000/api/serviceaccounts/5/tokens' \
+  'http://masun:123456@localhost:3000/api/serviceaccounts/5/tokens' \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -51,7 +51,7 @@ curl -X 'POST' \
 
 3️⃣ Test the Token
 export GRAFANA_TOKEN=*************************
-curl -X GET http://172.31.32.5:3000/api/org \
+curl -X GET http://localhost:3000/api/org \
   -H "Authorization: Bearer $GRAFANA_TOKEN"
 
 4️⃣ Save the Token in .env.grafana
@@ -61,3 +61,5 @@ echo GRAFANA_TOKEN=*************************** > .env.grafana
 sh run.sh
 
 This will apply the Ansible playbook using the exported token and provision dashboards/datasources into Grafana.
+
+
